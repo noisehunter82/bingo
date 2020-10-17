@@ -1,0 +1,30 @@
+#new-ticket-button {
+  height: 50px;
+  width: 200px;
+  border-radius: 15px;
+  font-size: 20px;
+}
+
+td {
+  height: 60px;
+  width: 60px;
+  background: white;
+  color: black;
+  font-size: 45px;
+  text-align: center;
+}
+
+button,
+td:hover {
+  cursor: pointer;
+}
+
+.match {
+background: Pink;
+color: red;
+}
+
+#status {
+  font-size: 20px;
+  margin: 30px;
+}

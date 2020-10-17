@@ -1,0 +1,16 @@
+
+button {
+cursor: pointer;
+}
+
+#bingo-button {
+  width: 200px;
+  height: 200px;
+  font-size: 50px;
+  color: white;
+  background: red;
+}
+
+#bingo-button:active {
+  background: grey;
+}
