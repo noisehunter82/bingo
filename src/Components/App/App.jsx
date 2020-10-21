@@ -10,37 +10,38 @@ class App extends React.Component {
     super();
     this.state = {
       ticket: {
-        field1: [],
-        field2: [],
-        field3: [],
-        field4: [],
-        field5: [],
-        field6: [],
-        field7: [],
-        field8: [],
-        field9: [],
-        field10: [],
-        field11: [],
-        field12: [],
-        field13: [],
-        field14: [],
-        field15: [],
-        field16: [],
-        field17: [],
-        field18: [],
-        field19: [],
-        field20: [],
-        field21: [],
-        field22: [],
-        field23: [],
-        field24: [],
-        field25: [],
-        field26: [],
-        field27: []
+        field1: {},
+        field2: {},
+        field3: {},
+        field4: {},
+        field5: {},
+        field6: {},
+        field7: {},
+        field8: {},
+        field9: {},
+        field10: {},
+        field11: {},
+        field12: {},
+        field13: {},
+        field14: {},
+        field15: {},
+        field16: {},
+        field17: {},
+        field18: {},
+        field19: {},
+        field20: {},
+        field21: {},
+        field22: {},
+        field23: {},
+        field24: {},
+        field25: {},
+        field26: {},
+        field27: {}
       },
-      calledNumber: '34', // CHANGE
+      calledNumber: '84', // CHANGE
       status: '',
-      username: 'noise82' // CHANGE
+      userId: '' //CHANGE
+
     };
     this.generateNewTicket = this.generateNewTicket.bind(this);
     this.markSelected = this.markSelected.bind(this);
@@ -49,6 +50,7 @@ class App extends React.Component {
 
   async generateNewTicket() {
     const newTicket = await ticketOperations.fetchNewTicket();
+    sessionStoreTicket(JSON.stringify(newTicket));
     this.setState({
       status: '',
       ticket: newTicket
@@ -58,11 +60,12 @@ class App extends React.Component {
   markSelected(e) {
     if (e.target.innerHTML === this.state.calledNumber) {
       const changedTicket = this.state.ticket;
-      changedTicket[e.target.id][0] = 'match';
+      changedTicket[e.target.id].class = 'match';
+      ticketOperations.sendTicketUpdate(changedTicket); // POST updated ticket
+      sessionStoreTicket(JSON.stringify(changedTicket)); // save updated ticket to local session
       this.setState({
         ticket: changedTicket
       });
-      // POST updated ticket
     } else {
       this.setState({
         status: 'Incorrect selection - not a match with the called number'
@@ -71,18 +74,12 @@ class App extends React.Component {
   }
 
   handleBingo(e) {
-    if (checkRow(this.state.ticket, 'topRow') || checkRow(this.state.ticket, 'midRow') || checkRow(this.state.ticket, 'botRow')) {
+    if (checkRow(this.state.ticket, this.state.calledNumber, 'topRow') || checkRow(this.state.ticket, this.state.calledNumber, 'midRow') || checkRow(this.state.ticket, this.state.calledNumber,'botRow')) {
       // POST BINGO ticket
       // Status = show confirmation from server
-      this.setState({ status: 'YAY BINGO, YA MOFO!' });
+      this.setState({ status: 'BINGO, YA MOFO!' });
     } else {
       this.setState({ status: 'NAY BINGO, YA MOFO!' });
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.state.ticket !== prevProps.ticket) {
-      sessionStoreTicket(JSON.stringify(this.state.ticket));
     }
   }
 
@@ -96,22 +93,24 @@ class App extends React.Component {
   }
 
   render() {
-    return (
+  
+      return (
 
-      <div id="main-box">
-        <Ticket status={this.state.status} ticket={this.state.ticket} handleSelect={this.markSelected} generateNewTicket={this.generateNewTicket} />
-        <Number calledNumber={this.state.calledNumber} />
+        <div id="main-box">
+          <Ticket status={this.state.status} ticket={this.state.ticket} handleSelect={this.markSelected} generateNewTicket={this.generateNewTicket} />
+          <Number calledNumber={this.state.calledNumber} />
 
-        <section id="bingo-button-container">
-          <button id="bingo-button" onClick={this.handleBingo}>BINGO</button>
-        </section>
+          <section id="bingo-button-container">
+            <button id="bingo-button" onClick={this.handleBingo}>BINGO</button>
+          </section>
 
 
 
-      </div>
+        </div>
 
-    );
-  }
+      );
+    }
+
 }
 
 export default App;
