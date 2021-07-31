@@ -2,13 +2,14 @@ let userId = 'noise82'; //to be changed
 let token = '';//
 
 const ticketOperations = {
+
   async fetchNewTicket() {
     return fetch(`http://localhost:8080/api/users/${userId}/ticket`, {
       method: 'get',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': token
+        'Authorization': token  // ?????
       }
     })
       .then(async response => {
@@ -29,11 +30,11 @@ const ticketOperations = {
         'Content-Type': 'application/json',
         'Authorization': token
       },
-      body: JSON.stringify({ticket})
+      body: JSON.stringify({ ticket })
     }).then(response => {
-        if (response.ok) {
-          return response.json();
-        }
+      if (response.ok) {
+        return response.json();
+      }
     }).then(responseBody => {
       return responseBody;
     }).catch(err => console.log(err));

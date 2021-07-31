@@ -1,4 +1,4 @@
-
+// This will have to generate a ticket batch (6 tickets)
 const RandomNumbers = {
 
   orderedArray: [],
@@ -6,6 +6,7 @@ const RandomNumbers = {
   midRow: [],
   botRow: [],
 
+  // Creates ordered array of numbers 1 - 91 inclusive
   generateArray() {
     this.orderedArray = [];
     for (let number = 1; number < 91; number++) {
@@ -13,40 +14,42 @@ const RandomNumbers = {
     }
   },
 
-  randomSelection(targetArray, sourceArray, value) {
+  // Moves a count of randomly selected numbers from source array to target array.
+  randomSelection(targetArray, sourceArray, count) {
     const resultArray = targetArray;
-    let counter = value;
-    while (counter > 0) {
+    for (let i = count; i > 0; i--) {
       const randomIndex = Math.floor(Math.random() * sourceArray.length);
       const randomNumber = sourceArray.splice(randomIndex, 1);
       resultArray.push(randomNumber[0]);
-      counter--;
     };
     return resultArray;
   },
 
-  pullRandomFiveNumbers(array) {
+  // Adds 5 random numbers to 4 blank fields.
+  addRandomFiveToBlanks(array) {
     const emptyStringsArray = ['', '', '', ''];
     const randomNineUnmixed = RandomNumbers.randomSelection(emptyStringsArray, array, 5);
     return randomNineUnmixed;
   },
 
-  mixNumbers(array) {
+  // Shuffles numbers and blanks.
+  shuffleArray(array) {
     const emptyArray = [];
     const mixedNumbers = RandomNumbers.randomSelection(emptyArray, array, array.length);
     return mixedNumbers;
   },
 
+  // Creates 3 new rows and assebles a single ticket
   getNewTicketObject() {
     RandomNumbers.generateArray();
-    let randomNine = RandomNumbers.pullRandomFiveNumbers(this.orderedArray);
-    this.topRow = RandomNumbers.mixNumbers(randomNine);
-    randomNine = RandomNumbers.pullRandomFiveNumbers(this.orderedArray);
-    this.midRow = RandomNumbers.mixNumbers(randomNine);
-    randomNine = RandomNumbers.pullRandomFiveNumbers(this.orderedArray);
-    this.botRow = RandomNumbers.mixNumbers(randomNine);
+    let randomNineFields = RandomNumbers.addRandomFiveToBlanks(this.orderedArray);
+    this.topRow = RandomNumbers.shuffleArray(randomNineFields);
+    randomNineFields = RandomNumbers.addRandomFiveToBlanks(this.orderedArray);
+    this.midRow = RandomNumbers.shuffleArray(randomNineFields);
+    randomNineFields = RandomNumbers.addRandomFiveToBlanks(this.orderedArray);
+    this.botRow = RandomNumbers.shuffleArray(randomNineFields);
     const newTicket = {
-     
+      // this needs to be refactored
       field1: { class: '', value: this.topRow[0] },
       field2: { class: '', value: this.topRow[1] },
       field3: { class: '', value: this.topRow[2] },
@@ -74,9 +77,13 @@ const RandomNumbers = {
       field25: { class: '', value: this.botRow[6] },
       field26: { class: '', value: this.botRow[7] },
       field27: { class: '', value: this.botRow[8] }
-      
+
     };
     return newTicket;
+  },
+
+  getNewTicketBatch() {
+    // Needs to be written
   }
 
 };

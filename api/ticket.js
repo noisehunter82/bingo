@@ -27,6 +27,7 @@ ticketsRouter.get('/', (req, res, next) => {
 //retrieve currently saved ticket for a given user
 
 ticketsRouter.put('/', (req, res, next) => {
+  //add ticket verification
   db.run(`INSERT INTO UpdatedTickets (user_id, ticket) VALUES ($user, $ticket)
     ON CONFLICT (user_id) DO UPDATE SET ticket = $ticket`,
     {

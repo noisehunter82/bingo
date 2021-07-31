@@ -38,7 +38,7 @@ class App extends React.Component {
         field26: {},
         field27: {}
       },
-      calledNumber: '84', // CHANGE
+      calledNumber: '8', // CHANGE
       status: '',
       userId: '' //CHANGE
 
@@ -77,9 +77,9 @@ class App extends React.Component {
     if (checkRow(this.state.ticket, this.state.calledNumber, 'topRow') || checkRow(this.state.ticket, this.state.calledNumber, 'midRow') || checkRow(this.state.ticket, this.state.calledNumber,'botRow')) {
       // POST BINGO ticket
       // Status = show confirmation from server
-      this.setState({ status: 'BINGO, YA MOFO!' });
+      this.setState({ status: 'BINGO!' });
     } else {
-      this.setState({ status: 'NAY BINGO, YA MOFO!' });
+      this.setState({ status: 'NO BINGO!' });
     }
   }
 

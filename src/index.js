@@ -7,12 +7,7 @@ import * as serviceWorker from './serviceWorker';
 ReactDOM.render(
   <React.StrictMode>
     <div id="main-flex-box">
-      <section id="stream-container">
-        <div id="stream">
-          <p>VIDEO STREAM</p>
-        </div>
-      </section>
-      <App />
+         <App />
     </div>
   </React.StrictMode>,
   document.getElementById('root')

@@ -24,13 +24,3 @@ body {
 section {
   text-align: center;
 }
-
-#stream {
-  background: green;
-  width: 800px;
-  height: 450px;
-}
-
-#stream p {
-  padding: 200px;
-}
