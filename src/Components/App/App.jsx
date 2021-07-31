@@ -2,8 +2,11 @@ import React from 'react';
 import Number from '../Number/Number';
 import Ticket from '../Ticket/Ticket';
 import './App.css';
-import ticketOperations from '../../localScripts/fetch';
-import { checkRow, sessionRetrieveTicket, sessionStoreTicket } from '../../localScripts/helperFunctions';
+import ticketOperations from '../../scripts/fetch';
+import { checkRow, sessionRetrieveTicket, sessionStoreTicket } from '../../scripts/helperFunctions';
+import { w3cwebsocket as W3CWebSocket, WebSocket } from "websocket";
+
+const client = new W3CWebSocket('ws://127.0.0.1:8080');
 
 class App extends React.Component {
   constructor(props) {
@@ -38,7 +41,7 @@ class App extends React.Component {
         field26: {},
         field27: {}
       },
-      calledNumber: '8', // CHANGE
+      calledNumber: '',
       status: '',
       userId: '' //CHANGE
 
@@ -74,7 +77,7 @@ class App extends React.Component {
   }
 
   handleBingo(e) {
-    if (checkRow(this.state.ticket, this.state.calledNumber, 'topRow') || checkRow(this.state.ticket, this.state.calledNumber, 'midRow') || checkRow(this.state.ticket, this.state.calledNumber,'botRow')) {
+    if (checkRow(this.state.ticket, this.state.calledNumber, 'topRow') || checkRow(this.state.ticket, this.state.calledNumber, 'midRow') || checkRow(this.state.ticket, this.state.calledNumber, 'botRow')) {
       // POST BINGO ticket
       // Status = show confirmation from server
       this.setState({ status: 'BINGO!' });
@@ -84,6 +87,16 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+
+    client.onopen = () => {
+      console.log('WebSocket Client Connected');
+      client.send('Bingo App - Client ID');
+    };
+
+    client.onmessage = (message) => {
+      this.setState({calledNumber: message['data']});
+    };
+
     const savedTicket = JSON.parse(sessionRetrieveTicket());
     if (savedTicket) {
       this.setState({
@@ -92,24 +105,29 @@ class App extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    client.send('Bingo says: Bye!');
+    WebSocket.close('Bye!');
+  }
+
   render() {
-  
-      return (
 
-        <div id="main-box">
-          <Ticket status={this.state.status} ticket={this.state.ticket} handleSelect={this.markSelected} generateNewTicket={this.generateNewTicket} />
-          <Number calledNumber={this.state.calledNumber} />
+    return (
 
-          <section id="bingo-button-container">
-            <button id="bingo-button" onClick={this.handleBingo}>BINGO</button>
-          </section>
+      <div id="main-box">
+        <Ticket status={this.state.status} ticket={this.state.ticket} handleSelect={this.markSelected} generateNewTicket={this.generateNewTicket} />
+        <Number calledNumber={this.state.calledNumber} />
+
+        <section id="bingo-button-container">
+          <button id="bingo-button" onClick={this.handleBingo}>BINGO</button>
+        </section>
 
 
 
-        </div>
+      </div>
 
-      );
-    }
+    );
+  }
 
 }
 

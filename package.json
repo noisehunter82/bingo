@@ -16,7 +16,8 @@
     "react-scripts": "^1.1.5",
     "sqlite3": "^5.0.0",
     "websocket": "^1.0.34",
-    "whatwg-fetch": "^3.4.1"
+    "whatwg-fetch": "^3.4.1",
+    "ws": "^8.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
