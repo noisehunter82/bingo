@@ -6,7 +6,7 @@ class Ticket extends React.Component {
   render() {
     return (
       <section id="ticket-container">
-        <button id="new-ticket-button" onClick={this.props.generateNewTicket}>NEW TICKET</button>
+        <button id="new-ticket-button" onClick={this.props.getNewTicket}>NEW TICKET</button>
         <p id="status">{this.props.status}</p>
 
         <table id="ticket-data">

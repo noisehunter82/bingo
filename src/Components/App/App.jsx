@@ -4,9 +4,9 @@ import Ticket from '../Ticket/Ticket';
 import './App.css';
 import ticketOperations from '../../scripts/fetch';
 import { checkRow, sessionRetrieveTicket, sessionStoreTicket } from '../../scripts/helperFunctions';
-import { w3cwebsocket as W3CWebSocket, WebSocket } from "websocket";
+import { w3cwebsocket as W3CWebSocket } from "websocket";
 
-const client = new W3CWebSocket('ws://127.0.0.1:8080');
+const socket = new W3CWebSocket('ws://127.0.0.1:8080');
 
 class App extends React.Component {
   constructor(props) {
@@ -46,12 +46,13 @@ class App extends React.Component {
       userId: '' //CHANGE
 
     };
-    this.generateNewTicket = this.generateNewTicket.bind(this);
+    this.getNewTicket = this.getNewTicket.bind(this);
     this.markSelected = this.markSelected.bind(this);
     this.handleBingo = this.handleBingo.bind(this);
+    this.unload = this.unload.bind(this);
   }
 
-  async generateNewTicket() {
+  async getNewTicket() {
     const newTicket = await ticketOperations.fetchNewTicket();
     sessionStoreTicket(JSON.stringify(newTicket));
     this.setState({
@@ -86,17 +87,25 @@ class App extends React.Component {
     }
   }
 
+  // Closes WebSocket when user closes page/browser
+  unload(e) {
+    socket.send('Bingo says: BYE!');
+    socket.close();
+  }
+
   componentDidMount() {
 
-    client.onopen = () => {
-      console.log('WebSocket Client Connected');
-      client.send('Bingo App - Client ID');
+    socket.onopen = () => {
+      console.log('WebSocket socket Connected');
+      socket.send('Bingo says: HELLO!');
     };
 
-    client.onmessage = (message) => {
+    socket.onmessage = (message) => {
       this.setState({calledNumber: message['data']});
     };
 
+    window.addEventListener("beforeunload", this.unload);
+  
     const savedTicket = JSON.parse(sessionRetrieveTicket());
     if (savedTicket) {
       this.setState({
@@ -106,8 +115,9 @@ class App extends React.Component {
   }
 
   componentWillUnmount() {
-    client.send('Bingo says: Bye!');
-    WebSocket.close('Bye!');
+
+    window.removeEventListener("beforeunload", this.unload);
+  
   }
 
   render() {
@@ -115,7 +125,7 @@ class App extends React.Component {
     return (
 
       <div id="main-box">
-        <Ticket status={this.state.status} ticket={this.state.ticket} handleSelect={this.markSelected} generateNewTicket={this.generateNewTicket} />
+        <Ticket status={this.state.status} ticket={this.state.ticket} handleSelect={this.markSelected} getNewTicket={this.getNewTicket} />
         <Number calledNumber={this.state.calledNumber} />
 
         <section id="bingo-button-container">
