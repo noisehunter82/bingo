@@ -15,7 +15,7 @@ let randomNumber;
 let last89Used = [];
 setInterval(() => {
  
-  while (last89Used.indexOf(randomNumber) !== -1) {
+  while (last89Used.indexOf(randomNumber) !== -1 || randomNumber === undefined) {
     randomNumber = getRandomNumber();
   }
 
@@ -25,6 +25,7 @@ setInterval(() => {
     last89Used.shift();
   }
 
+  console.log(last89Used);
 }, 5000);
 
 
@@ -37,9 +38,12 @@ const wsServer = new webSocket.Server({ server });
 wsServer.on('connection', (socket) => {
   socket.send('Hi there, I am a WebSocket server');
 
+
   setInterval(() => {
     wsServer.clients.forEach((client) => {
       if (client.readyState === webSocket.OPEN) {
+        console.log(randomNumber);
+      
         client.send(randomNumber);
       }
     });
