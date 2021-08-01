@@ -1,20 +1,20 @@
-// This will have to generate a ticket batch (6 tickets)
-const RandomNumbers = {
+const NewTicket = {
 
   orderedArray: [],
   topRow: [],
   midRow: [],
   botRow: [],
 
-  // Creates ordered array of numbers 1 - 91 inclusive
+  // Creates ordered array of numbers 1 - 90 inclusive
   generateArray() {
-    this.orderedArray = [];
+    const array = [];
     for (let number = 1; number < 91; number++) {
-      this.orderedArray.push(number.toString());
+      array.push(number.toString());
     }
+    return array;
   },
 
-  // Moves a count of randomly selected numbers from source array to target array.
+  // Moves a count of randomly selected numbers from source array to target array. Used by both fucntions below.
   randomSelection(targetArray, sourceArray, count) {
     const resultArray = targetArray;
     for (let i = count; i > 0; i--) {
@@ -26,29 +26,29 @@ const RandomNumbers = {
   },
 
   // Adds 5 random numbers to 4 blank fields.
-  addRandomFiveToBlanks(array) {
+  addRandomFiveToBlanks() {
     const emptyStringsArray = ['', '', '', ''];
-    const randomNineUnmixed = RandomNumbers.randomSelection(emptyStringsArray, array, 5);
-    return randomNineUnmixed;
+    return NewTicket.randomSelection(emptyStringsArray, this.orderedArray, 5);
+   
   },
 
   // Shuffles numbers and blanks.
   shuffleArray(array) {
     const emptyArray = [];
-    const mixedNumbers = RandomNumbers.randomSelection(emptyArray, array, array.length);
-    return mixedNumbers;
+    return NewTicket.randomSelection(emptyArray, array, array.length);
+   
   },
 
   // Creates 3 new rows and assebles a single ticket
   getNewTicketObject() {
-    RandomNumbers.generateArray();
-    let randomNineFields = RandomNumbers.addRandomFiveToBlanks(this.orderedArray);
-    this.topRow = RandomNumbers.shuffleArray(randomNineFields);
-    randomNineFields = RandomNumbers.addRandomFiveToBlanks(this.orderedArray);
-    this.midRow = RandomNumbers.shuffleArray(randomNineFields);
-    randomNineFields = RandomNumbers.addRandomFiveToBlanks(this.orderedArray);
-    this.botRow = RandomNumbers.shuffleArray(randomNineFields);
-    const newTicket = {
+    this.orderedArray = NewTicket.generateArray();
+    let unshuffledNineFields = NewTicket.addRandomFiveToBlanks();
+    this.topRow = NewTicket.shuffleArray(unshuffledNineFields);
+    unshuffledNineFields = NewTicket.addRandomFiveToBlanks();
+    this.midRow = NewTicket.shuffleArray(unshuffledNineFields);
+    unshuffledNineFields = NewTicket.addRandomFiveToBlanks();
+    this.botRow = NewTicket.shuffleArray(unshuffledNineFields);
+    return {
       // this needs to be refactored
       field1: { class: '', value: this.topRow[0] },
       field2: { class: '', value: this.topRow[1] },
@@ -79,13 +79,11 @@ const RandomNumbers = {
       field27: { class: '', value: this.botRow[8] }
 
     };
-    return newTicket;
+    
   },
 
-  getNewTicketBatch() {
-    // Needs to be written
-  }
 
 };
 
-module.exports = RandomNumbers;
+
+module.exports = NewTicket;

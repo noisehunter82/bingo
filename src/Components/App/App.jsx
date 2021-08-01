@@ -50,6 +50,7 @@ class App extends React.Component {
     this.markSelected = this.markSelected.bind(this);
     this.handleBingo = this.handleBingo.bind(this);
     this.unload = this.unload.bind(this);
+    this.handleResetStatus = this.handleResetStatus.bind(this);
   }
 
   async getNewTicket() {
@@ -85,6 +86,17 @@ class App extends React.Component {
     } else {
       this.setState({ status: 'NO BINGO!' });
     }
+
+  }
+
+  // Clears status field after 3 seconds
+  handleResetStatus(e) {
+    setTimeout(() => {
+      this.setState({
+        status: ''
+      })
+    }, 3000);
+
   }
 
   // Closes WebSocket when user closes page/browser
@@ -96,16 +108,17 @@ class App extends React.Component {
   componentDidMount() {
 
     socket.onopen = () => {
-      console.log('WebSocket socket Connected');
       socket.send('Bingo says: HELLO!');
     };
 
     socket.onmessage = (message) => {
-      this.setState({calledNumber: message['data']});
+      console.log(message['data']);
+      if (this.calledNumber === message['data']) return;
+      this.setState({ calledNumber: message['data'] });
     };
 
-    window.addEventListener("beforeunload", this.unload);
-  
+    window.onbeforeunload = this.unload;
+
     const savedTicket = JSON.parse(sessionRetrieveTicket());
     if (savedTicket) {
       this.setState({
@@ -114,18 +127,14 @@ class App extends React.Component {
     }
   }
 
-  componentWillUnmount() {
-
-    window.removeEventListener("beforeunload", this.unload);
-  
-  }
 
   render() {
 
     return (
 
       <div id="main-box">
-        <Ticket status={this.state.status} ticket={this.state.ticket} handleSelect={this.markSelected} getNewTicket={this.getNewTicket} />
+        <Ticket resetStatus={this.handleResetStatus} status={this.state.status} ticket={this.state.ticket} handleSelect={this.markSelected} getNewTicket={this.getNewTicket} />
+
         <Number calledNumber={this.state.calledNumber} />
 
         <section id="bingo-button-container">

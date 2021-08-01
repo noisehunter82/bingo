@@ -3,11 +3,14 @@ import './Ticket.css';
 
 class Ticket extends React.Component {
 
-  render() {
+  componentDidUpdate(prevProps) {
+    if (this.props.status !== prevProps.status) this.props.resetStatus();
+  }
+   render() {
     return (
       <section id="ticket-container">
         <button id="new-ticket-button" onClick={this.props.getNewTicket}>NEW TICKET</button>
-        <p id="status">{this.props.status}</p>
+        <p id="status" >{this.props.status}</p>
 
         <table id="ticket-data">
           <tbody>

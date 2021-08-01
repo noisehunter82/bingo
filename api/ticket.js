@@ -1,11 +1,11 @@
 const express = require('express');
 const ticketsRouter = express.Router({mergeParams: true});
-const RandomNumbers = require('../utils/newTicket');
+const NewTicket = require('../utils/newTicket');
 const sqlite3 = require('sqlite3');
 const db = new sqlite3.Database('./database.sqlite');
 
 ticketsRouter.get('/', (req, res, next) => {
-  const newTicket = RandomNumbers.getNewTicketObject();
+  const newTicket = NewTicket.getNewTicketObject();
   console.log(newTicket, req.params.userId);
   db.serialize(() => {
     db.run(`INSERT INTO NewTickets (user_id, ticket) VALUES ($user, $ticket)
