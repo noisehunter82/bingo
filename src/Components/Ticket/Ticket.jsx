@@ -6,7 +6,8 @@ class Ticket extends React.Component {
   componentDidUpdate(prevProps) {
     if (this.props.status !== prevProps.status) this.props.resetStatus();
   }
-   render() {
+
+  render() {
     return (
       <section id="ticket-container">
         <button id="new-ticket-button" onClick={this.props.getNewTicket}>NEW TICKET</button>

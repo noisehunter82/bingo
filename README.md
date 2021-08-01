@@ -1,3 +1,24 @@
+Check out my Bingo app!
+
+This is a project at the development stage. 
+
+User can:
+- request new ticket from the server,
+- mark called numbers,
+- hit Bingo button when 5 numbers in one row have been called.
+
+Front end:
+- React,
+- Websocket: receiving called numbers from the server.
+
+Back end:
+- Express (Node.js): main http erver, api router and logic,
+- ws (websocket).
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

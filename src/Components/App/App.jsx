@@ -141,8 +141,6 @@ class App extends React.Component {
           <button id="bingo-button" onClick={this.handleBingo}>BINGO</button>
         </section>
 
-
-
       </div>
 
     );
